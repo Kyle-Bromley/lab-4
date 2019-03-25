@@ -1,0 +1,154 @@
+#include <cstdlib>   //Random Function
+#include <iostream>  //I/O Stream
+#include <ctime>     //Time Function setting random seed
+using namespace std;
+
+//User Libraries
+#include "LinkedList.h"
+
+//Global Constants
+//Physics/Math/Conversions/2+ArrayDimenstions
+//No Global Variables
+
+//Execution Begins with Main
+int main(int argc, char** argv) {
+	//Random Number seed set once here
+	srand(static_cast<unsigned int>(time(0)));
+
+	//Declare and initialize variables
+	Node *head = new Node();
+	head = head->filNode(10);
+
+	//Display results here
+	head->prtNode();
+	cout << endl;
+
+	head->push_back(8);
+	head->prtNode();
+	cout << endl;
+
+	head->pop_back();
+	head->prtNode();
+	cout << endl;
+
+	//Clean up code
+	//head->destroy();
+
+	//Exit stage right
+	return 0;
+}
+
+
+==================================================================================================================================
+
+#ifndef LINKEDLIST_H
+#define LINKEDLIST_H
+#include <iostream>
+#include <new>       // Needed for bad_alloc exception
+#include <cstdlib>   // Needed for the exit function
+using namespace std;
+
+
+class Node {
+
+private:
+
+
+public:
+	int data;
+	Node *ptr;
+	Node();
+	~Node();
+	void prtNode();
+	void destroy();
+	Node *filNode(int n);
+	void push_back(int n);
+	void pop_back();
+	Node push_front(int n);
+};
+
+Node::Node() 
+{
+	data = NULL;
+	ptr = NULL;
+}
+
+Node::~Node()
+{
+}
+
+
+Node *Node::filNode(int n) {
+	//Initialize the front
+	Node *head = new Node;
+	head->data = n--;
+	head->ptr = NULL;
+	Node *tail = head;
+	//Loop until filled
+	do {
+		Node *next = new Node;
+		next->data = n--;
+		next->ptr = NULL;
+		tail->ptr = next;
+		tail = next;
+	} while (n >= 0);
+
+	return head;
+}
+
+void Node::push_back(int n)
+{
+	if (this->data == NULL)
+	{
+		this->data = n;
+		return;
+	}
+
+	Node *i;
+	for (i = this; i->ptr != NULL; i = i->ptr);
+	i->ptr = new Node;
+	i->ptr->data = n;
+}
+
+void Node::pop_back()
+{
+	Node *i;
+	for (i = this; i->ptr->ptr != NULL; i = i->ptr);
+	delete i->ptr;
+	i->ptr = NULL;
+}
+
+Node Node::push_front(int n)
+{
+	Node *temp = new Node;
+	if (this->data != NULL)
+	{		
+		temp->ptr = this;
+		temp->data = n;
+		return *temp;
+	}
+	
+	return *temp;
+}
+
+
+
+void Node::prtNode() {
+	Node *temp = this;
+	do {
+		cout << temp->data << endl;
+		temp = temp->ptr;
+	} while (temp != NULL);
+}
+
+void Node::destroy() {
+	Node *temp = this;
+	Node *tempHead;
+	do {
+		tempHead = temp->ptr;
+		delete this;
+		tempHead = temp;
+	} while (temp != NULL);
+}
+
+#endif
